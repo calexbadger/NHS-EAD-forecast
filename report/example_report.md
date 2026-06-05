@@ -5,15 +5,15 @@ output:
 ---
 # NHS Severe Patient Harm Forecasting
 
-**Author:** Alex Rabeau  
+**Author:** Alex Rabeau
 **Date:** February 2026
 
 ## Introduction
 
-This report outlines a refined workflow for forecasting estimated avoidable deaths in NHS trust-level data using an Elastic Net regression model.  
+This report outlines a refined workflow for forecasting estimated avoidable deaths in NHS trust-level data using an Elastic Net regression model.
 The updated pipeline includes improved preprocessing (midday aggregation and timestamp handling), feature engineering with lagged outcomes and rolling statistics, skewness correction, and a rolling-window multi-horizon forecast strategy.
 
-The dataset consists of daily NHS system metrics, including hospital, ambulance, and performance indicators.  
+The dataset consists of daily NHS system metrics, including hospital, ambulance, and performance indicators.
 The target variable is **estimated_avoidable_deaths**.
 
 ---
@@ -21,8 +21,8 @@ The target variable is **estimated_avoidable_deaths**.
 
 ## 1. Load and Preprocess Data
 
-We begin by loading the combined outcome and predictor datasets.  
-Data timestamps are standardized to UTC and aggregated to daily resolution using a midday threshold (entries before 12:00 are assigned to the same day; those after, to the next day).  
+We begin by loading the combined outcome and predictor datasets.
+Data timestamps are standardized to UTC and aggregated to daily resolution using a midday threshold (entries before 12:00 are assigned to the same day; those after, to the next day).
 Columns are cleaned, abbreviated, and imputed using Kalman smoothing.
 
 ```r
@@ -46,7 +46,7 @@ data <- data %>%
     time = format(dt, "%H:%M:%S")
   )
 
-data <- data %>% 
+data <- data %>%
   filter(dt <= as.POSIXct("2025-09-30 00:00:00", tz = "UTC")) #filter out assessment dataset
 
 # Midday aggregation
@@ -120,7 +120,7 @@ predictors <- setdiff(names(forecasting_df), c("midday_day","estimated_avoidable
 
 Numeric predictors with skew > 1 were transformed:
 
-- Positive skew: log1p (if all values > 0) or sqrt  
+- Positive skew: log1p (if all values > 0) or sqrt
 - Negative skew: squared
 
 ```r

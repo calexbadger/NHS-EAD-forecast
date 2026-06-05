@@ -399,7 +399,7 @@ data &lt;- data %&gt;%
     time = format(dt, &quot;%H:%M:%S&quot;)
   )
 
-data &lt;- data %&gt;% 
+data &lt;- data %&gt;%
   filter(dt &lt;= as.POSIXct(&quot;2025-09-30 00:00:00&quot;, tz = &quot;UTC&quot;)) #filter out assessment dataset
 
 # Midday aggregation
