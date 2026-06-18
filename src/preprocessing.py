@@ -164,7 +164,7 @@ def impute_missing_values(df: pd.DataFrame) -> pd.DataFrame:
     return df.ffill()
 
 
-def load_and_preprocess_data(filepath: str) -> pd.DataFrame:
+def load_and_preprocess_data(filepath: str, cutoff_date: str = "2025-09-30") -> pd.DataFrame:
     """
     Orchestrates the end-to-end data preprocessing pipeline.
 
@@ -176,6 +176,11 @@ def load_and_preprocess_data(filepath: str) -> pd.DataFrame:
     ----------
     filepath : str
         Path to the raw CSV dataset.
+    cutoff_date : str, default="2025-09-30"
+        The date threshold for filtering the assessment dataset.
+        # NOTE: Added to allow for full training + validation dataset to be analysed.
+        # Confirmation from competition organisers (A. Rabeau, email 08/06/2026).
+        # Original submission assumed a single updated dataset file.
 
     Returns
     -------
@@ -187,7 +192,7 @@ def load_and_preprocess_data(filepath: str) -> pd.DataFrame:
     df = pd.read_csv(filepath)
 
     logger.info("Filtering dates and applying midday boundary...")
-    df = filter_and_shift_to_midday_dates(df)
+    df = filter_and_shift_to_midday_dates(df, cutoff_date=cutoff_date)
 
     logger.info("Cleaning and standardising feature names...")
     df = clean_feature_names(df)
